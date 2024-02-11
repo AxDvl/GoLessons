@@ -1,0 +1,2 @@
+go build -o .\bin\ .\cmd\calculatorServer
+.\bin\calculatorServer.exe
