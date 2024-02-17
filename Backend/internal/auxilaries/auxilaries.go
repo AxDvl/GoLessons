@@ -5,7 +5,7 @@ import (
 )
 
 func GetStringFromBody(r io.ReadCloser) (string, error) {
-	buf := make([]byte, 10)
+	buf := make([]byte, 100)
 	s := ""
 	for {
 		n, err := r.Read(buf)
