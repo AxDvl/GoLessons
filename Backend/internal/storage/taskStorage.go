@@ -23,11 +23,11 @@ type TaskInfo struct {
 
 type TaskStoreStruct struct {
 	Mu    sync.RWMutex
-	Tasks map[string]TaskInfo
+	Tasks map[string]*TaskInfo
 }
 
 func NewStore() *TaskStoreStruct {
-	return &TaskStoreStruct{Tasks: make(map[string]TaskInfo)}
+	return &TaskStoreStruct{Tasks: make(map[string]*TaskInfo)}
 }
 
 var TaskStore *TaskStoreStruct
@@ -36,11 +36,11 @@ var TaskStore *TaskStoreStruct
 func (store *TaskStoreStruct) AddTask(taskText string) TaskInfo {
 	taskID := strings.ReplaceAll(taskText, " ", "")
 	if tsk, ok := store.Tasks[taskID]; ok {
-		return tsk
+		return *tsk
 	}
 	tsk := TaskInfo{ID: taskID, TaskText: taskText, CleanValue: taskID, Result: 0, Status: TaskStatusNew}
 	store.Mu.Lock()
-	store.Tasks[taskID] = tsk
+	store.Tasks[taskID] = &tsk
 	store.Mu.Unlock()
 	return tsk
 }

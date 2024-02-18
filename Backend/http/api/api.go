@@ -46,7 +46,7 @@ func setTask(w http.ResponseWriter, r *http.Request) {
 		var tasks []storage.TaskInfo
 		storage.TaskStore.Mu.RLock()
 		for _, value := range storage.TaskStore.Tasks {
-			tasks = append(tasks, value)
+			tasks = append(tasks, *value)
 		}
 		storage.TaskStore.Mu.RUnlock()
 		err := json.NewEncoder(w).Encode(tasks)

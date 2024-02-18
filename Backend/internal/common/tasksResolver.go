@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/AxDvl/GoLessons/backend/internal/auxilaries"
@@ -20,6 +21,7 @@ func StartResolve(ctx context.Context, store *storage.TaskStoreStruct) {
 					if task.Status == storage.TaskStatusNew {
 						_, err := auxilaries.BuildGraph(task.CleanValue)
 						if err != nil {
+							fmt.Println(err.Error())
 							store.SetTaskWrongParseStatus(task.ID)
 						}
 
