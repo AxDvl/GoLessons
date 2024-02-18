@@ -5,8 +5,8 @@ import (
 	"strconv"
 )
 
-func Parse(text string) ([]auxilaries.Token, error) {
-	var res []auxilaries.Token
+func Parse(text string) ([]Token, error) {
+	var res []Token
 	plus := rune('+')
 	minus := rune('-')
 	mul := rune('*')
@@ -25,16 +25,16 @@ func Parse(text string) ([]auxilaries.Token, error) {
 				return res, errors.New("Выражение не может начинаться с оператора")
 			}
 
-			operator := auxilaries.OPPlus
+			operator := OPPlus
 			switch r {
 			case plus:
-				operator = auxilaries.OPPlus
+				operator = OPPlus
 			case minus:
-				operator = auxilaries.OPPlus
+				operator = OPPlus
 			case mul:
-				operator = auxilaries.OPMul
+				operator = OPMul
 			case divide:
-				operator = auxilaries.OPMul
+				operator = OPMul
 			}
 
 			if len(buf) > 0 {
@@ -45,10 +45,10 @@ func Parse(text string) ([]auxilaries.Token, error) {
 				if negative {
 					val = -val
 				}
-				res = append(res, auxilaries.NewValueToken(float32(val), inverse))
+				res = append(res, NewValueToken(float32(val), inverse))
 				buf = buf[:0]
 			}
-			res = append(res, auxilaries.NewOperatorToken(operator))
+			res = append(res, NewOperatorToken(operator))
 			negative = r == minus
 			inverse = r == divide
 		} else {
@@ -63,13 +63,13 @@ func Parse(text string) ([]auxilaries.Token, error) {
 		if negative {
 			val = -val
 		}
-		res = append(res, auxilaries.NewValueToken(float32(val), inverse))
+		res = append(res, NewValueToken(float32(val), inverse))
 	}
 	return res, nil
 }
 
-func BuildGraph(tokens []auxilaries.Token) ([]auxilaries.Token, error) {
-	var res []auxilaries.Token
+func BuildGraph(tokens []Token) ([]Token, error) {
+	var res []Token
 
 	const (
 		exLeftOperand  = 0
