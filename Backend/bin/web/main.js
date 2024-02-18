@@ -11,3 +11,11 @@ async function buttonSendClick(){
     
     alert(result)
 }
+
+async function buttonResultsClick(){
+  let elem = document.querySelector('#results')
+  let response = await fetch('/api/task');
+  let result = await response.text()
+  
+  alert(result)
+}

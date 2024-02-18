@@ -68,7 +68,7 @@ func Parse(text string) ([]Token, error) {
 	return res, nil
 }
 
-func BuildGraph(tokens []Token) ([]Token, error) {
+func buildGraphLayer(tokens []Token) ([]Token, error) {
 	var res []Token
 
 	const (
@@ -135,4 +135,23 @@ func BuildGraph(tokens []Token) ([]Token, error) {
 	}
 
 	return res, nil
+}
+
+func BuildGraph(text string) (Token, error) {
+	compiled, err := Parse(text)
+	if err != nil {
+		return tokenStruct{}, err
+	}
+
+	for {
+		if len(compiled) < 2 {
+			break
+		}
+		compiled, err = buildGraphLayer(compiled)
+		if err != nil {
+			return tokenStruct{}, err
+		}
+	}
+
+	return compiled[0], nil
 }

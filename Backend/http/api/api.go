@@ -33,11 +33,26 @@ func NewApiHandler(ctx context.Context) (http.Handler, error) {
 }
 
 func setTask(w http.ResponseWriter, r *http.Request) {
-	taskText, _ := auxilaries.GetStringFromBody(r.Body)
-	task := storage.TaskStore.AddTask(taskText)
-	err := json.NewEncoder(w).Encode(task)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if r.Method == http.MethodPost {
+		taskText, _ := auxilaries.GetStringFromBody(r.Body)
+		task := storage.TaskStore.AddTask(taskText)
+		err := json.NewEncoder(w).Encode(task)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
+
+	if r.Method == http.MethodGet {
+		var tasks []storage.TaskInfo
+		storage.TaskStore.Mu.RLock()
+		for _, value := range storage.TaskStore.Tasks {
+			tasks = append(tasks, value)
+		}
+		storage.TaskStore.Mu.RUnlock()
+		err := json.NewEncoder(w).Encode(tasks)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 
 	//go func(task storage.TaskInfo) {

@@ -8,6 +8,7 @@ import (
 	"os/signal"
 
 	"github.com/AxDvl/GoLessons/backend/http/api"
+	"github.com/AxDvl/GoLessons/backend/internal/common"
 	"github.com/AxDvl/GoLessons/backend/internal/storage"
 )
 
@@ -18,11 +19,14 @@ func New() *Application {
 }
 
 func (a *Application) Run(ctx context.Context) int {
+	ctx, cancel := context.WithCancel(ctx)
 	storage.Config = storage.NewConfig()
-	storage.TaskStore = *storage.NewStore()
+	storage.TaskStore = storage.NewStore()
+	common.StartResolve(ctx, storage.TaskStore)
 
 	handler, err := api.NewApiHandler(ctx)
 	if err != nil {
+		cancel()
 		return 1
 	}
 
@@ -34,15 +38,13 @@ func (a *Application) Run(ctx context.Context) int {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 
-	ctx, cancel := context.WithCancel(context.Background())
-
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	notifyCtx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
 	<-c
 	cancel()
 	//  завершим работу сервера
-	srv.Shutdown(ctx)
+	srv.Shutdown(notifyCtx)
 	fmt.Println("STOP")
 
 	return 0
