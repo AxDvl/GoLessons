@@ -1,6 +1,7 @@
 package auxilaries
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 )
@@ -22,6 +23,19 @@ func GetStringFromBody(r io.ReadCloser) (string, error) {
 	}
 	return s, nil
 
+}
+
+func GetBodyAsJson(r io.ReadCloser, obj any) error {
+	bodyText, err := GetStringFromBody(r)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal([]byte(bodyText), obj)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func PrintTokenList(tokens []Token) {

@@ -92,6 +92,19 @@ func (store *ExpressionStoreStruct) TakeExpression(executorId int) *ExpressionIn
 	return nil
 }
 
+func (store *ExpressionStoreStruct) SetResult(expressionId string, result float32, timeUpdateOnly bool) {
+	store.Mu.RLock()
+	expr, ok := store.Expressions[expressionId]
+	store.Mu.RUnlock()
+	if ok && expr.Status != ExprStatusDone {
+		expr.LastUpdate = time.Now()
+		if !timeUpdateOnly {
+			expr.Result = result
+			expr.Status = ExprStatusDone
+		}
+	}
+}
+
 func (store *ExpressionStoreStruct) GetResult(expressionId string) (float32, bool) {
 	store.Mu.RLock()
 	expr, ok := store.Expressions[expressionId]
