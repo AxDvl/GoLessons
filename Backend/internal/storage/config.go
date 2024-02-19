@@ -11,5 +11,5 @@ type ConfigStruct struct {
 var Config ConfigStruct
 
 func NewConfig() ConfigStruct {
-	return ConfigStruct{PlusDuration: 20, MinusDuration: 20, MulDuration: 20, DivideDuration: 20, AgentWaitTimeout: 60}
+	return ConfigStruct{PlusDuration: 2, MinusDuration: 2, MulDuration: 2, DivideDuration: 2, AgentWaitTimeout: 60}
 }

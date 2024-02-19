@@ -103,7 +103,6 @@ type AgentInfo struct {
 	Id int
 }
 
-// Пока не используется
 func regAgent(w http.ResponseWriter, r *http.Request) {
 	AgentCount++
 	info := AgentInfo{Id: AgentCount}

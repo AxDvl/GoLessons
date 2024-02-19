@@ -24,7 +24,7 @@ func (a *Application) Run(ctx context.Context) int {
 	storage.TaskStore = storage.NewStore()
 	storage.ExpressionStore = storage.NewExpressionStore()
 	common.StartResolve(ctx, storage.TaskStore, storage.ExpressionStore)
-	common.StartAgent(ctx, storage.ExpressionStore) //TODO: Убрать когда появятся агенты
+	//common.StartAgent(ctx, storage.ExpressionStore) //TODO: Убрать когда появятся агенты
 
 	handler, err := api.NewApiHandler(ctx)
 	if err != nil {

@@ -15,6 +15,7 @@ const (
 )
 
 type ExpressionInfo struct {
+	Id           string
 	Status       int
 	ExecutorId   int
 	Result       float32
@@ -64,6 +65,7 @@ func (store *ExpressionStoreStruct) AddExpression(expr auxilaries.ExpressionToke
 	}
 
 	info = &ExpressionInfo{
+		Id:           id,
 		Status:       ExprStatusNew,
 		ExecutorId:   0,
 		Result:       0,
