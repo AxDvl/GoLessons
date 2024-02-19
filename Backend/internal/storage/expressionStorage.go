@@ -45,7 +45,7 @@ func (store *ExpressionStoreStruct) AddExpression(expr auxilaries.ExpressionToke
 	}
 
 	if !expr.CanBeResolved() {
-		return ExpressionInfo{}, errors.New("Выражение пока не может быть вычислено, так как не вычеслены его подвыражения")
+		return ExpressionInfo{}, errors.New("Выражение пока не может быть вычислено, так как не вычислены его подвыражения")
 	}
 
 	leftValue := expr.LeftOperand().Value()

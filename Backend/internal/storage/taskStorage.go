@@ -10,6 +10,7 @@ import (
 const TaskStatusNew int = 0   //Выражение еще не обработано
 const TaskStatusDone int = 1  //Выражение обработано и вычеслен его результат
 const TaskStatusError int = 2 //Ошибка парсинга или вычисления (деление на 0) выражения
+const TaskStatusProcessing int = 3
 
 type TaskInfo struct {
 	ID          string    //В качестве идентификатора будем использовать CleanValue

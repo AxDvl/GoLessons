@@ -19,16 +19,29 @@ func StartResolve(ctx context.Context, store *storage.TaskStoreStruct, exprStore
 				store.Mu.RLock()
 				for _, task := range store.Tasks {
 					if task.Status == storage.TaskStatusNew {
+						task.Status = storage.TaskStatusProcessing
 						expr, err := auxilaries.BuildGraph(task.CleanValue)
 						if err != nil {
 							fmt.Println(err.Error())
 							store.SetTaskWrongParseStatus(task.ID)
 						} else {
 							fmt.Println("==================")
-							value, ok := ResolveExpression(expr, exprStore)
-							if ok {
-								store.SetTaskResult(task.ID, value)
-							}
+							go func(task *storage.TaskInfo, ctx context.Context, exprStore *storage.ExpressionStoreStruct) {
+								for {
+									select {
+									case <-ctx.Done():
+										return
+									default:
+										value, ok := ResolveExpression(expr, exprStore)
+										auxilaries.PrintToken(expr)
+										if ok {
+											store.SetTaskResult(task.ID, value)
+											return
+										}
+									}
+								}
+							}(task, ctx, exprStore)
+
 						}
 
 					}
