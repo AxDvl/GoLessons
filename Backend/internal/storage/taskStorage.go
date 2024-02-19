@@ -35,9 +35,12 @@ var TaskStore *TaskStoreStruct
 // Добавляет выражение в хранилище, а если такое выражение уже есть, то возвращает его
 func (store *TaskStoreStruct) AddTask(taskText string) TaskInfo {
 	taskID := strings.ReplaceAll(taskText, " ", "")
+	store.Mu.RLock()
 	if tsk, ok := store.Tasks[taskID]; ok {
 		return *tsk
 	}
+	store.Mu.RUnlock()
+
 	tsk := TaskInfo{ID: taskID, TaskText: taskText, CleanValue: taskID, Result: 0, Status: TaskStatusNew}
 	store.Mu.Lock()
 	store.Tasks[taskID] = &tsk

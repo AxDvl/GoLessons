@@ -22,7 +22,9 @@ func (a *Application) Run(ctx context.Context) int {
 	ctx, cancel := context.WithCancel(ctx)
 	storage.Config = storage.NewConfig()
 	storage.TaskStore = storage.NewStore()
-	common.StartResolve(ctx, storage.TaskStore)
+	storage.ExpressionStore = storage.NewExpressionStore()
+	common.StartResolve(ctx, storage.TaskStore, storage.ExpressionStore)
+	common.StartAgent(ctx, storage.ExpressionStore) //TODO: Убрать когда появятся агенты
 
 	handler, err := api.NewApiHandler(ctx)
 	if err != nil {

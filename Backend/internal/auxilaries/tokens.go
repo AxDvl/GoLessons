@@ -21,6 +21,7 @@ type ValueToken interface {
 const (
 	OPPlus int = iota
 	OPMul
+	OPDivide //Операция деления при парсинге не будет использоваться, она будет применяться уже при отправке агентам
 )
 
 type OperatorToken interface {
