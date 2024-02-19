@@ -1,5 +1,12 @@
 package storage
 
+import (
+	"encoding/json"
+	"io"
+	"os"
+	"path/filepath"
+)
+
 type ConfigStruct struct {
 	PlusDuration     int //Время вычисления операции "+" в секундах
 	MinusDuration    int //Время вычисления операции "-" в секундах
@@ -11,5 +18,27 @@ type ConfigStruct struct {
 var Config ConfigStruct
 
 func NewConfig() ConfigStruct {
-	return ConfigStruct{PlusDuration: 10, MinusDuration: 10, MulDuration: 10, DivideDuration: 10, AgentWaitTimeout: 60}
+	//Config будем грузить из файла config.json, если его нет или возникли какие-либо ошибки при его чтении, то вернем конфиг по-умолчаню
+	res := ConfigStruct{PlusDuration: 10, MinusDuration: 10, MulDuration: 10, DivideDuration: 10, AgentWaitTimeout: 60}
+	path, err := os.Executable()
+	if err != nil {
+		path = ""
+	}
+	path = filepath.Join(filepath.Dir(path), "config.json")
+
+	jsonFile, err := os.Open(path)
+	if err != nil {
+		return res
+	}
+	defer jsonFile.Close()
+
+	jsonData, err := io.ReadAll(jsonFile)
+	if err != nil {
+		return res
+	}
+
+	json.Unmarshal(jsonData, &res)
+
+	return res
+
 }
