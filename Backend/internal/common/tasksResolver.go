@@ -64,7 +64,7 @@ func ResolveExpression(exprToken auxilaries.Token, store *storage.ExpressionStor
 	var expr auxilaries.ExpressionToken
 	var ok bool
 	if expr, ok = exprToken.(auxilaries.ExpressionToken); !ok {
-		if val, ok := exprToken.(auxilaries.ExpressionToken); ok {
+		if val, ok := exprToken.(auxilaries.ValueToken); ok {
 			return val.Value(), true
 		}
 		return 0, false
